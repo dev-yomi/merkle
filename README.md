@@ -43,7 +43,7 @@ The following steps demonstrate how to use the script and the contract.
 
 ## License
 
-[MIT](LICENSE)
+MIT so do whatever
 
 ## Disclaimer
 
