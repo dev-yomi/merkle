@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+
+contract Sigils is ERC721URIStorage, Ownable {
+    using Strings for uint256;
+    
+    uint256 public tokenCounter;
+    uint256 public price = 0.1 ether;
+    uint256 public maxPerWallet = 1;
+    uint256 public maxSupply = 400;
+
+    string public baseURI;
+    bytes32 public merkleRoot;
+
+    constructor (string memory _baseURI, bytes32 _merkleRoot) ERC721("Sigils", "SIGIL") {
+        tokenCounter = 0;
+        baseURI = _baseURI;
+        merkleRoot = _merkleRoot;
+    }
+
+    function mint(bytes32[] calldata _merkleProof) public payable returns (uint256) {
+        require(msg.value == price, "Incorrect price given.");
+        require(balanceOf(msg.sender) < maxPerWallet, "Wallet already minted.");
+        require(tokenCounter < maxSupply, "Minted out.");
+        // Verify the Merkle proof
+        bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
+        require(MerkleProof.verify(_merkleProof, merkleRoot, leaf), "Invalid Merkle proof");
+        uint256 newItemId = tokenCounter;
+        _safeMint(msg.sender, newItemId);
+        _setTokenURI(newItemId, string(abi.encodePacked(baseURI, newItemId.toString(), ".json")));
+        tokenCounter = tokenCounter + 1;
+        return newItemId;
+    }
+
+    function withdrawEther() external onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function updateMerkleRoot(bytes32 _newRoot) external onlyOwner {
+        merkleRoot = _newRoot;
+    }
+
+    function updatePrice(uint256 _newPrice) external onlyOwner {
+        price = _newPrice;
+    } 
+}
