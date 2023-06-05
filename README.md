@@ -48,3 +48,50 @@ MIT so do whatever
 ## Disclaimer
 
 This contract has not been audited. Use at your own risk.
+
+# MerkleNFT Contract
+
+This repository contains the smart contract implementation of MerkleNFT, an ERC721 non-fungible token (NFT) contract with Merkle proof verification. 
+
+## Contract Details
+
+- **Name**: MerkleNFT
+- **Symbol**: NFTN
+- **License**: MIT License
+
+## Contract Structure
+
+The MerkleNFT contract extends the ERC721URIStorage contract from the OpenZeppelin library and inherits from the Ownable contract.
+
+## Contract Variables
+
+- **tokenCounter**: A variable that keeps track of the total number of tokens minted.
+- **price**: The price required to mint a token, set to 0.1 ether.
+- **maxPerWallet**: The maximum number of tokens that can be minted per wallet, set to 1.
+- **maxSupply**: The maximum total supply of tokens that can be minted, set to 400.
+- **baseURI**: The base URI used to construct the token URI.
+- **merkleRoot**: The Merkle root hash used for verifying ownership.
+
+## Contract Functions
+
+- **constructor**: The constructor function initializes the contract by setting the base URI and the Merkle root.
+- **mint**: This function allows users to mint a token by providing a valid Merkle proof and paying the specified price. It verifies the Merkle proof, mints the token, and sets the token URI.
+- **withdrawEther**: This function allows the contract owner to withdraw the contract's balance (ETH).
+- **updateMerkleRoot**: This function allows the contract owner to update the Merkle root.
+- **updatePrice**: This function allows the contract owner to update the price required to mint a token.
+
+## Dependencies
+
+The contract relies on the following external libraries from the OpenZeppelin framework:
+
+- ERC721URIStorage.sol: Provides the implementation for ERC721 tokens with URI storage.
+- Strings.sol: Provides utility functions for manipulating string data.
+- Ownable.sol: Implements a contract ownership mechanism.
+- MerkleProof.sol: Implements Merkle proof verification.
+
+## License
+
+This contract is licensed under the MIT License. Please refer to the SPDX-License-Identifier comment at the beginning of the contract for more details.
+
+For more information about the contract, please refer to the source code and comments within the contract file.
+
